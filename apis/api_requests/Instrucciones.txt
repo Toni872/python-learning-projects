@@ -1,0 +1,42 @@
+Resumen de funcionalidades de la API:
+
+1. Lista de empleados: Se define una lista global `employees` que contiene objetos con `id` y `name`.
+2. Obtener empleados: La ruta `GET /employees` devuelve la lista completa de empleados en formato JSON.
+3. Eliminar empleado: La ruta `DELETE /employees/<int:id>` permite eliminar un empleado por su `id`. Si el empleado no existe, devuelve un error 404.
+
+Sugerencia de mejora:
+Agregar una ruta POST para permitir la creación de nuevos empleados:
+
+# Ruta POST para agregar un nuevo empleado
+@app.route('/employees', methods=['POST'])
+def add_employee():
+    global employees
+    # Obtener los datos del cuerpo de la solicitud
+    new_employee = request.get_json()
+    if not new_employee or 'id' not in new_employee or 'name' not in new_employee:
+        return jsonify({'error': 'Invalid data. Employee must have an id and a name.'}), 400
+    
+    # Verificar si el ID ya existe
+    if get_employee(new_employee['id']):
+        return jsonify({'error': 'Employee with this ID already exists.'}), 400
+    
+    # Agregar el nuevo empleado a la lista
+    employees.append(new_employee)
+    return jsonify(new_employee), 201
+
+Cómo acceder al servidor Flask:
+
+1. Ejecuta el servidor Flask:
+   - Abre una terminal y navega al directorio del archivo api1.py.
+   - Ejecuta el archivo con: python api1.py
+
+2. Verifica que el servidor esté corriendo:
+   - Deberías ver un mensaje como: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+
+3. Accede al servidor desde tu navegador o herramienta de prueba:
+   - Visita: http://127.0.0.1:5000/employees para ver la lista de empleados.
+   - Usa herramientas como Postman o curl para probar las rutas.
+
+4. Prueba las rutas:
+   - GET: Visita http://127.0.0.1:5000/employees para obtener todos los empleados.
+   - DELETE: Envía una solicitud DELETE a http://127.0.0.1:5000/employees/<id> (reemplaza <id> con el ID del empleado que deseas eliminar).
